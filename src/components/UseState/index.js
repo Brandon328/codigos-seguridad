@@ -3,41 +3,57 @@ import React from 'react';
 const SECURITY_CODE = 'paradigma';
 
 function UseState() {
-  const [value, setValue] = React.useState('');
-  const [error, setError] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [state, setState] = React.useState({
+    value: '',
+    error: false,
+    loading: false
+  })
+
   React.useEffect(() => {
-    if (!!loading) {
+    if (!!state.loading) {
       // La doble negación nos permite validar si la variable es diferente de undefined y si es verdadero.
-      setError(false);
       setTimeout(() => {
-        if (value !== SECURITY_CODE) {
-          setError(true);
-          setValue('');
-        }
-        setLoading(false);
+        if (state.value === SECURITY_CODE)
+          setState({
+            ...state,
+            error: false,
+            loading: false
+          })
+
+        else
+          setState({
+            ...state,
+            error: true,
+            loading: false,
+            value: ''
+          })
       }, 3000);
     }
     console.log('termina el efect');
-  }, [loading])
+  }, [state.loading])
   return (
     <div>
       <h2>Eliminar UseState</h2>
       <p>Por favor, escribe el código de seguridad.</p>
-      {error && (<p>Error: Código de seguridad invalido</p>)}
-      {(loading && !error) && (<p>Cargando...</p>)}
-      <div>
+      {state.error && (<p>Error: Código de seguridad invalido</p>)}
+      {(state.loading && !state.error) && (<p>Cargando...</p>)}
+      <form>
         <input
           placeholder='Código de seguridad'
-          value={value}
-          onChange={(event) => setValue(event.target.value)}
+          value={state.value}
+          onChange={(event) => setState({ ...state, value: event.target.value })}
         />
         <input
-          type='button'
+          type='submit'
           value='Comprobar'
-          onClick={() => setLoading(!loading)}
+          onClick={(e) => {
+            e.preventDefault();
+            setState({
+              ...state, loading: true, error: false
+            });
+          }}
         />
-      </div>
+      </form>
     </div>
   );
 }

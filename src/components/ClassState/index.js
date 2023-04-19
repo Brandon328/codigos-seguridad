@@ -30,18 +30,21 @@ class ClassState extends React.Component {
         <p>Por favor, escribe el código de seguridad.</p>
         {this.state.error && (<p>Error: Código de seguridad invalido</p>)}
         {(this.state.loading && !this.state.error) && (<p>Cargando...</p>)}
-        <div>
+        <form>
           <input
             placeholder='Código de seguridad'
             value={this.state.value}
             onChange={event => this.setState({ value: event.target.value })}
           />
           <input
-            type='button'
+            type='submit'
             value='Comprobar'
-            onClick={() => this.setState({ loading: true, error: false })}
+            onClick={(e) => {
+              e.preventDefault();
+              this.setState({ loading: true, error: false });
+            }}
           />
-        </div>
+        </form>
       </div>
     );
   }
