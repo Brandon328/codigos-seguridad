@@ -1,70 +1,424 @@
-# Getting Started with Create React App
+# Curso de React.js: Manejo profesional del estado
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Tabla de contenido
 
-## Available Scripts
+- [Curso de React.js: Manejo profesional del estado](#curso-de-reactjs-manejo-profesional-del-estado)
+  - [Tabla de contenido](#tabla-de-contenido)
+  - [Componentes](#componentes)
+    - [Componentes con funciones](#componentes-con-funciones)
+    - [Componentes con clases](#componentes-con-clases)
+  - [Estado](#estado)
+    - [Estados simples](#estados-simples)
+    - [Estados compuestos](#estados-compuestos)
+  - [useEffect](#useeffect)
+      - [Ciclo de vida de un componente](#ciclo-de-vida-de-un-componente)
+  - [Paradigmas de programación](#paradigmas-de-programación)
+    - [Imperativo](#imperativo)
+    - [Declarativo](#declarativo)
+---
 
-In the project directory, you can run:
+## Componentes
 
-### `npm start`
+Los componentes de React pueden ser creados de dos maneras: con funciones y clases.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Componentes con funciones
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Los componentes se crean con funciones de la siguiente manera: 
 
-### `npm test`
+```javascript
+import React from 'react';
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+function FunctionComponent(props) {
+  ...
+  return (
+    ...
+  )
+}
+export { FunctionComponent };
+```
 
-### `npm run build`
+### Componentes con clases
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Los componentes se crean usando clases de javascript de la siguiente manera:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```javascript
+import React from 'react';
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+class ClassComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    ...
+  }
+  render() {
+    return (
+      ...
+    );
+  }
+}
 
-### `npm run eject`
+export { ClassComponent };
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Los props ahora se reciben desde el constructor de la clase y dentro de la función `render()` se retorna el contenido del componente
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Estado
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Estados simples
 
-## Learn More
+Son aquellos que son definidos como se muestra abajo, son individuales y almacenan tipos de datos como number, string, boolean, etc, es decir, solo un valor con su respectivo actualizador.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```javascript
+function FunctionComponent() {
+  const [value, setValue] = React.useState('')
+  const [error, setError] = React.useState(false)
+  const [counter, setCounter] = React.useState(0)
+  setValue('Hola')
+  setError(true)
+  setCounter(5)
+  ...
+}
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**NOTA:** Los componentes creados a partir de clases solo pueden hacer uso de estados compuestos.
 
-### Code Splitting
+### Estados compuestos
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Los estados compuestos agrupan a los estados simples en una estructura de datos, comúnmente un objeto.
 
-### Analyzing the Bundle Size
+```javascript
+function FunctionComponent() {
+  const [state, setState] = React.useState({
+    value: '',
+    error: false,
+    counter: 0
+  })
+  setState({
+    ...state, 
+    value: 'Hola',
+    error: true,
+    counter: 5
+  })
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```javascript
+import React from 'react';
 
-### Making a Progressive Web App
+class ClassComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: '',
+      error: false,
+      counter: 0
+    };
+  }
+  render(){
+    this.state({
+      value: 'Hola',
+      error: true,
+      counter: 5
+    })
+    ...
+  }
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
+**NOTA:** Es importante pasar las props a la clase de la cual se esta heredando, en este caso `React.Component`, desde el constructor para poder hacer uso de `this.state`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## useEffect
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+En un componente creado a partir de una función se implementa de la siguiente manera:
 
-### `npm run build` fails to minify
+```javascript
+function FunctionComponent() {
+  React.useEffect(() => {
+    ...
+  }
+  }, [...])
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Mientras que para un componente creado a partir de una clase tenemos que hacer uso del uso de [ciclo de vida de un componente de React](#ciclo-de-vida-de-un-componente), específicamente del método `componentDidUpdate()` el cual se ejecuta cada vez que detecte un cambio en el estado de nuestro componente:
+
+```javascript
+class ClassComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    ...
+  }
+  componentDidUpdate() {
+    ...
+  }
+}
+```
+
+
+#### Ciclo de vida de un componente
+
+![Ciclo de vida de un componente](ciclodevida.png)
+
+---
+## Paradigmas de programación
+
+Son formas de organizar y plantear nuestras ideas para después ser pasadas a código de programación.
+
+### Imperativo
+
+Consiste en escribir código de tal manera que se entienda el paso a paso de la solución implementada.
+
+***Ejemplo:***
+```javascript
+import React from 'react';
+
+const SECURITY_CODE = 'paradigma';
+
+function UseState() {
+  const [state, setState] = React.useState({
+    value: '',
+    error: false,
+    loading: false,
+    delete: false,
+    confirm: false
+  })
+
+  React.useEffect(() => {
+    if (!!state.loading) {
+      // La doble negación nos permite validar si la variable es diferente de undefined y si es verdadero.
+      setTimeout(() => {
+        if (state.value === SECURITY_CODE)
+          setState({
+            ...state,
+            error: false,
+            loading: false,
+            value: '',
+            confirm: true
+          })
+
+        else
+          setState({
+            ...state,
+            error: true,
+            loading: false,
+            value: ''
+          })
+      }, 3000);
+    }
+  }, [state.loading])
+
+  if (!state.delete && !state.confirm)
+    return (
+      <div>
+        <h2>Eliminar UseState</h2>
+        <p>Por favor, escribe el código de seguridad.</p>
+        {state.error && (<p>Error: Código de seguridad invalido</p>)}
+        {(state.loading && !state.error) && (<p>Cargando...</p>)}
+        <form>
+          <input
+            placeholder='Código de seguridad'
+            value={state.value}
+            onChange={(event) => setState({ ...state, value: event.target.value })}
+          />
+          <input
+            type='submit'
+            value='Comprobar'
+            onClick={(e) => {
+              e.preventDefault();
+              setState({
+                ...state, loading: true, error: false
+              });
+            }}
+          />
+        </form>
+      </div>
+    );
+  else if (!state.delete && !!state.confirm)
+    return (
+      <div>
+        <h2>Eliminar UseState</h2>
+        <p>¿Estás seguro que deseas eliminar UseState?</p>
+        <div>
+          <button
+            type="button"
+            onClick={() => {
+              setState({
+                ...state,
+                delete: true
+              })
+            }}
+          >
+            Por supuesto
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setState({
+                ...state,
+                confirm: false
+              })
+            }}
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    )
+  else
+    return (
+      <div>
+        <h2>Eliminar UseState</h2>
+        <p>Eliminado con éxito</p>
+        <button
+          type='button'
+          onClick={() => setState({
+            ...state,
+            delete: false,
+            confirm: false
+          })}
+        >
+          Recuperar UseState
+        </button>
+      </div>
+    )
+}
+
+export { UseState };
+```
+
+### Declarativo
+
+Al contrario del paradigma imperativo, este no se centra tanto en seguir un código paso a paso sino en abstraerlo en funciones y métodos con distintos fines como por ejemplo reutilizarlo.
+
+***Ejemplo:***
+```javascript
+import React from 'react';
+
+const SECURITY_CODE = 'paradigma';
+
+function UseState() {
+  const [state, setState] = React.useState({
+    value: '',
+    error: false,
+    loading: false,
+    delete: false,
+    confirm: false
+  })
+
+  const onCorrect = () => {
+    setState({
+      ...state,
+      error: false,
+      loading: false,
+      value: '',
+      confirm: true
+    });
+  }
+  const onError = () => {
+    setState({
+      ...state,
+      error: true,
+      loading: false,
+      value: ''
+    });
+  }
+  const onWrite = (newValue) => {
+    setState({ ...state, value: newValue });
+  }
+  const onCheck = () => {
+    setState({
+      ...state, loading: true, error: false
+    });
+  }
+  const onConfirm = () => {
+    setState({
+      ...state,
+      delete: true
+    })
+  }
+  const onReset = () => {
+    setState({
+      ...state,
+      confirm: false,
+      delete: false
+    })
+  }
+
+  React.useEffect(() => {
+    if (!!state.loading) {
+      // La doble negación nos permite validar si la variable es diferente de undefined y si es verdadero.
+      setTimeout(() => {
+        if (state.value === SECURITY_CODE)
+          onCorrect();
+        else
+          onError();
+      }, 3000);
+    }
+  }, [state.loading])
+
+  if (!state.delete && !state.confirm)
+    return (
+      <div>
+        <h2>Eliminar UseState</h2>
+        <p>Por favor, escribe el código de seguridad.</p>
+        {state.error && (<p>Error: Código de seguridad invalido</p>)}
+        {(state.loading && !state.error) && (<p>Cargando...</p>)}
+        <form>
+          <input
+            placeholder='Código de seguridad'
+            value={state.value}
+            onChange={(event) => onWrite(event.target.value)}
+          />
+          <input
+            type='submit'
+            value='Comprobar'
+            onClick={(e) => {
+              e.preventDefault();
+              onCheck();
+            }}
+          />
+        </form>
+      </div>
+    );
+  else if (!state.delete && !!state.confirm)
+    return (
+      <div>
+        <h2>Eliminar UseState</h2>
+        <p>¿Estás seguro que deseas eliminar UseState?</p>
+        <div>
+          <button
+            type="button"
+            onClick={onConfirm}
+          >
+            Por supuesto
+          </button>
+          <button
+            type="button"
+            onClick={onReset}
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    )
+  else
+    return (
+      <div>
+        <h2>Eliminar UseState</h2>
+        <p>Eliminado con éxito</p>
+        <button
+          type='button'
+          onClick={onReset}
+        >
+          Recuperar UseState
+        </button>
+      </div>
+    )
+}
+
+export { UseState };
+```
