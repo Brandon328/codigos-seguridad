@@ -8,16 +8,13 @@ function UseReducer({ name }) {
   React.useEffect(() => {
     if (!!state.loading) {
       // La doble negación nos permite validar si la variable es diferente de undefined y si es verdadero.
+      console.log(state.value);
       setTimeout(() => {
         if (state.value === SECURITY_CODE)
-          dispatch({
-            type: 'CORRECT'
-          });
+          dispatch({ type: 'CORRECT' });
         else
-          dispatch({
-            type: 'ERROR'
-          })
-      }, 3000);
+          dispatch({ type: 'ERROR' })
+      }, 1500);
     }
   }, [state.loading])
 
@@ -39,7 +36,10 @@ function UseReducer({ name }) {
             value='Comprobar'
             onClick={(e) => {
               e.preventDefault();
+              console.log(state.value)
               dispatch({ type: 'CHECK' });
+              console.log('este es el value')
+              console.log(state.value)
             }}
           />
         </form>
@@ -124,8 +124,8 @@ const reducerObject = (state, payload) => ({
 });
 
 const reducer = (state, action) => {
-  if (reducerObject(initialState)[action.type])
-    return reducerObject(initialState, action.payload)[action.type];
+  if (reducerObject(state)[action.type])
+    return reducerObject(state, action.payload)[action.type];
   else
     return state;
 }
