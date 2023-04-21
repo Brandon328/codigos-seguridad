@@ -426,7 +426,7 @@ export { UseState };
 ---
 
 ## Reducer
-
+[Lee el comentario completo](https://platzi.com/comentario/3143908/)
 ![¿Qué es un reducer?](qesunreducer.jpg)
 
 ```javascript
